@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Challenge: Mad Libs</title>
+</head>
+<body>
+
+    <h1>Mad Libs</h1>
+
+    <form id="libform">
+        <label for="noun">Noun:</label><input type="text" id="noun"><br>
+        <label for="adjective">Adjective:</label><input type="text" id="adjective"><br>
+        <label for="person">Someone's Name:</label><input type="text" id="person"><br>
+        <label for="verb">Verb:</label><input type="text" id="verb"><br>
+        <label for="place">A place:</label><input type="text" id="place"><br>
+        <button id="lib-button">Lib it!</button>
+    </form>
+
+    <p>Generated story: 
+    <span id="story"></span>
+    </p>
+
+    <script>
+        const form = document.getElementById("libform");
+        const nounInput = document.getElementById("noun");
+        const adjectiveInput = document.getElementById("adjective");
+        const personInput = document.getElementById("person");
+        const verbInput = document.getElementById("verb");
+        const placeInput = document.getElementById("place");
+        const storyOutput = document.getElementById("story");
+
+        class Story {
+            constructor(template) {
+                this.template = template;
+            }
+
+            replaceWords(replacements) {
+                const keys = Object.keys(replacements);
+                const values = Object.values(replacements);
+                return this.template.replace(/%\w+%/g, (match) => {
+                    const index = keys.indexOf(match.slice(1, -1));
+                    return values[index] || match; // Use original match if replacement not found
+                });
+            }
+        }
+
+        const story1 = new Story("Today, I went to the zoo. I saw a very %adjective% %noun% running around. It %verb% at me and I %verb% back! We became quick friends and then went to get ice cream at %place%.");
+        const story2 = new Story("Yesterday, I woke up feeling very %adjective%. I decided to go for a walk in %place%. While I was walking, I saw %person% %verb%ing a %noun%. It was a very strange sight!");
+        const story3 = new Story("Last week, I was cleaning my room when I found an old %noun%. It was covered in dust and looked very %adjective%. I decided to keep it as a reminder of the past.");
+
+        const storyArray = [story1, story2, story3];
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            const replacements = {
+                noun: nounInput.value,
+                adjective: adjectiveInput.value,
+                person: personInput.value,
+                verb: verbInput.value,
+                place: placeInput.value
+            };
+
+            const randomStory = storyArray[Math.floor(Math.random() * storyArray.length)];
+            const generatedStory = randomStory.replaceWords(replacements);
+
+            storyOutput.textContent = generatedStory;
+        });
+    </script>
+
+</body>
+</html>
